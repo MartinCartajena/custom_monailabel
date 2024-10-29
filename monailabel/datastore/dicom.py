@@ -26,6 +26,7 @@ from monailabel.datastore.utils.convert import binary_to_image, dicom_to_nifti, 
 from monailabel.datastore.utils.dicom import dicom_web_download_series, dicom_web_upload_dcm
 from monailabel.interfaces.datastore import DefaultLabelTag
 from monailabel.utils.others.generic import md5_digest
+# from monailabel.endpoints.user.auth import Token
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +49,7 @@ class DICOMWebDatastore(LocalDatastore):
         fetch_by_frame=False,
         convert_to_nifti=True,
     ):
+        
         self._client = client
         self._search_filter = search_filter
         self._fetch_by_frame = fetch_by_frame
@@ -66,6 +68,12 @@ class DICOMWebDatastore(LocalDatastore):
     def name(self) -> str:
         base_url: str = self._client.base_url
         return base_url
+    
+    def setClientHeader(self, header):
+        self._client.headers = header
+
+    def getClient(self) -> DICOMwebClient:
+        return self._client
 
     def _to_id(self, file: str) -> Tuple[str, str]:
         extensions = [".nii", ".nii.gz", ".nrrd"]

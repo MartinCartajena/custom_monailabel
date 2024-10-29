@@ -24,19 +24,19 @@ class Settings(BaseSettings):
     MONAI_LABEL_STUDIES: str = ""
     MONAI_LABEL_APP_CONF: Dict[str, Any] = {}
 
-    MONAI_LABEL_AUTH_ENABLE: bool = False
-    MONAI_LABEL_AUTH_REALM_URI: str = "http://localhost:8080/realms/monailabel"
+    MONAI_LABEL_AUTH_ENABLE: bool = True
+    MONAI_LABEL_AUTH_REALM_URI: str = "https://bgpermed.vicomtech.org/realms/LUCIA"
     MONAI_LABEL_AUTH_TIMEOUT: int = 10
     MONAI_LABEL_AUTH_TOKEN_USERNAME: str = "preferred_username"
     MONAI_LABEL_AUTH_TOKEN_EMAIL: str = "email"
     MONAI_LABEL_AUTH_TOKEN_NAME: str = "name"
     MONAI_LABEL_AUTH_TOKEN_ROLES: str = "realm_access#roles"
-    MONAI_LABEL_AUTH_CLIENT_ID: str = "monailabel-app"
+    MONAI_LABEL_AUTH_CLIENT_ID: str = "orthanc"
 
-    MONAI_LABEL_AUTH_ROLE_ADMIN: str = "monailabel-admin"
-    MONAI_LABEL_AUTH_ROLE_REVIEWER: str = "monailabel-reviewer"
-    MONAI_LABEL_AUTH_ROLE_ANNOTATOR: str = "monailabel-annotator"
-    MONAI_LABEL_AUTH_ROLE_USER: str = "monailabel-user"
+    MONAI_LABEL_AUTH_ROLE_ADMIN: str = "lucia_researcher_role"
+    MONAI_LABEL_AUTH_ROLE_REVIEWER: str = "lucia_researcher_role"
+    MONAI_LABEL_AUTH_ROLE_ANNOTATOR: str = "lucia_researcher_role"
+    MONAI_LABEL_AUTH_ROLE_USER: str = "lucia_researcher_role"
 
     MONAI_LABEL_TASKS_TRAIN: bool = True
     MONAI_LABEL_TASKS_STRATEGY: bool = True

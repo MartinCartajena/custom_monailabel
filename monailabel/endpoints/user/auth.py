@@ -18,7 +18,7 @@ from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from passlib.context import CryptContext
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from monailabel.config import settings
 
@@ -28,9 +28,22 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
+def singleton(class_):
+    instances = {}
+    def getinstance(*args, **kwargs):
+        if class_ not in instances:
+            instances[class_] = class_(*args, **kwargs)
+        return instances[class_]
+    return getinstance
+    
+@singleton
 class Token(BaseModel):
-    access_token: str
-    token_type: str
+    
+    access_token: str = Field(default="")
+    token_type: str = Field(default="Bearer ")
+
+    def __str__(self):
+        return f"Token(access_token='{self.access_token}', token_type='{self.token_type}')"
 
 
 @cached(cache={})
@@ -82,13 +95,17 @@ def from_token(token: str):
         return DEFAULT_USER
 
     options = {
-        "verify_signature": True,
+        "verify_signature": False,
         "verify_aud": False,
         "verify_exp": True,
     }
 
     key = get_public_key(settings.MONAI_LABEL_AUTH_REALM_URI)
-    payload = jwt.decode(token, key, options=options)
+    payload = jwt.decode(token, key, options=options) 
+    
+    if settings.MONAI_LABEL_AUTH_ENABLE:
+        update_token = Token()
+        update_token.access_token = token
 
     username: str = payload.get(settings.MONAI_LABEL_AUTH_TOKEN_USERNAME)
     email: str = payload.get(settings.MONAI_LABEL_AUTH_TOKEN_EMAIL)

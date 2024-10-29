@@ -19,6 +19,8 @@ from monailabel.config import settings
 from monailabel.interfaces.exception import MONAILabelError, MONAILabelException
 from monailabel.utils.others.class_utils import get_class_of_subclass_from_file
 
+from monailabel.endpoints.user.auth import Token
+
 logger = logging.getLogger(__name__)
 apps: Dict[str, Any] = {}
 
@@ -31,6 +33,11 @@ def app_instance(app_dir=None, studies=None, conf=None):
     global apps
     app = apps.get(cache_key)
     if app is not None:
+        
+        if settings.MONAI_LABEL_AUTH_ENABLE:
+            token = Token()
+            app._datastore._client._session.headers.update({"Token": token.access_token})
+            
         return app
 
     conf = conf if conf else settings.MONAI_LABEL_APP_CONF
